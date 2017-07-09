@@ -12,22 +12,26 @@ base_page = urllib2.urlopen(base_url)
 page_soup = BeautifulSoup(base_page, "html.parser")
 ## Get the artist
 artist = page_soup.title.string.strip(' Lyrics')
-try:								# Error thrown if folder already exists
-	os.mkdir(str(artist))			# Create a folder for the artist
+try:									# Error thrown if folder already exists
+	os.mkdir(str(artist))				# Create a folder for the artist
 except OSError, e:
-	if e.errno != 17:				# Handle only "folder exists" error
+	if e.errno != 17:					# Handle only "folder exists" error
 		raise
 	pass
+
 ## TODO : Add artist name folder to the .gitignore file
 ## Get all links on the page
 links = page_soup.find_all("a")
 song_links = []
 for link in links:
 	song_links.append(str(link.get("href")))
+
 ## Get rid of the garbage links
 for item in (item for item in song_links[:] 
-			if not item.startswith('../lyrics/eminem/')):
+			if not item.startswith(('../lyrics/' 
+			+ str(artist).lower() + '/'))):
 	song_links.remove(item)
+
 ## Iterate through the song_links list and parse the lyrics for each site
 links_pos = 0
 while links_pos < len(song_links):
@@ -45,7 +49,7 @@ while links_pos < len(song_links):
 		haystack.append(str(x))
 	## Find the actual lyrics from the "haystack" of html tags and sections
 	pos = 0
-	lyrics = ""			# for testing purposes
+	lyrics = ""							# for testing purposes
 	while pos < len(haystack):
 		if len(haystack[pos]) > 500:	# Needs tuning for length of lyrics
 			# print(len(haystack[pos]))
@@ -55,5 +59,5 @@ while links_pos < len(song_links):
 	## Write to file & close file
 	file.write(lyrics)
 	file.close()
-	time.sleep(10)			# Sleep 10 seconds to not send too many requests
+	time.sleep(10)				# Sleep 10 seconds to not request too quickly
 	links_pos += 1
