@@ -7,11 +7,13 @@ from bs4 import BeautifulSoup
 
 
 site_url = "http://www.azlyrics.com/"
-base_url = "http://www.azlyrics.com/e/eminem.html"
+base_url = "http://www.azlyrics.com/19/2pac.html"
+## TODO: add list of artists + way to check if they have already been added
 base_page = urllib2.urlopen(base_url)
 page_soup = BeautifulSoup(base_page, "html.parser")
 ## Get the artist
-artist = page_soup.title.string.strip(' Lyrics')
+## TODO: artists with spaces in their name "chance the rapper"
+artist = page_soup.title.string.replace(' Lyrics', '').lower()
 try:									# Error thrown if folder already exists
 	os.mkdir(str(artist))				# Create a folder for the artist
 except OSError, e:
@@ -28,16 +30,15 @@ for link in links:
 
 ## Get rid of the garbage links
 for item in (item for item in song_links[:] 
-			if not item.startswith(('../lyrics/' 
-			+ str(artist).lower() + '/'))):
+			if not item.startswith(('../lyrics/' + str(artist) + '/'))):
 	song_links.remove(item)
 
 ## Iterate through the song_links list and parse the lyrics for each site
 links_pos = 0
 while links_pos < len(song_links):
 	title = str(song_links[links_pos]).replace(("../lyrics/" 
-			+ str(artist).lower() + "/"), "").replace(".html", "")
-	## TODO: skip songs with "interlude" or "intro" in name
+			+ str(artist) + "/"), "").replace(".html", "")
+	## TODO: skip songs with "interlude", "intro", "remix" in name
 	print(title)
 	## open a file with the title of the song and begin searching for lyrics
 	file = open(str(artist) + '/' + str(title) + '.txt', 'wb')
