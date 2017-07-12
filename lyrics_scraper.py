@@ -8,7 +8,11 @@ from bs4 import BeautifulSoup
 
 site_url = "http://www.azlyrics.com/"
 base_url = "http://www.azlyrics.com/19/2pac.html"
-## TODO: add list of artists + way to check if they have already been added
+## TODO: add list of artists & way to check if they have already been added
+##		 read from artists.txt, read those that don't start with '+'
+##		 once the 'while' loop below finishes, add '+' to artist.txt
+##		 remove all spaces, and append to the end of site_url
+##		 example links: (/n/nas.html, /e/eminem.html)
 base_page = urllib2.urlopen(base_url)
 page_soup = BeautifulSoup(base_page, "html.parser")
 ## Get the artist
@@ -60,5 +64,5 @@ while links_pos < len(song_links):
 	## Write to file & close file
 	file.write(lyrics)
 	file.close()
-	time.sleep(10)				# Sleep 10 seconds to not request too quickly
+	time.sleep(8)				# Sleep 8 seconds to not request too quickly
 	links_pos += 1
