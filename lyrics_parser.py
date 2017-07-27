@@ -11,6 +11,11 @@ import os
 import re
 import fnmatch
 
+## TODO: below
+# get artist from directory
+# get all files in that directory ending in .txt
+# create a directory for cleaned files
+# skip all files with "intro, skit, remix, etc..."
 
 artist = 'nas'											# Testing only
 
