@@ -15,7 +15,7 @@ with open('artist_links.txt', 'r') as links_file:
 		page_soup = BeautifulSoup(base_page, "html.parser")
 		## Get the artist name
 		artist = page_soup.title.string.replace(' Lyrics', '').lower()
-		for punc in [' ', '-', '.', ',']:			# Replace punctuation
+		for punc in [' ', '-', '.', ',', '\'']:			# Replace punctuation
 			if punc in artist:
 				artist = artist.replace(punc, '')
 
