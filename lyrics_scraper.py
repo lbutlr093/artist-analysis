@@ -15,7 +15,10 @@ with open('artist_links.txt', 'r') as links_file:
 		page_soup = BeautifulSoup(base_page, "html.parser")
 		## Get the artist name
 		artist = page_soup.title.string.replace(' Lyrics', '').lower()
-		artist = artist.replace(' ', '').replace('-', '').replace('.', '')
+		for punc in [' ', '-', '.', ',']:			# Replace punctuation
+			if punc in artist:
+				artist = artist.replace(punc, '')
+
 		artist_dir = "artists/" + str(artist)
 		print('\n' + 'Artist: ' + str(artist) + '\n')		# Testing
 		try:									# Error thrown if folder exists
