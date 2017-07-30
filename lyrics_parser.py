@@ -43,6 +43,9 @@ for subdir, dirs, files in os.walk(root_dir):
 				if (re.search(r"[[\]]+", temp)) == None:
 					for line in f:
 						output_file.write(line)
+				#elif ((re.search(r"[[\]]+", temp)) != None) and (artist.lower().replace(' ', '') not in temp):
+					#print("hello")
+
 				else:
 				# Add case for files that are being skipped ( [Hook:], [Verse 1], [x2] )
 					flag = False
