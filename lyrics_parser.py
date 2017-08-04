@@ -45,7 +45,9 @@ for subdir, dirs, files in os.walk(root_dir):
 						output_file.write(line)
 				#elif ((re.search(r"[[\]]+", temp)) != None) and (artist.lower().replace(' ', '') not in temp):
 					#print("hello")
-
+				# If there are no headers -> return entire file
+				# If there are headers, but no artist inside them -> retun entire file
+				# If there are headers, and artist is inside -> only return blocks with artist
 				else:
 				# Add case for files that are being skipped ( [Hook:], [Verse 1], [x2] )
 					flag = False
