@@ -26,6 +26,7 @@ for subdir, dirs, files in os.walk(root_dir):
 		print('parsing lyrics from: ' + str(artist))
 		subdir = str(subdir) + '/'
 		file_list = fnmatch.filter(os.listdir(subdir), '*.txt')
+		song_structure = ["chorus", "outro", "interlude", "verse", "intro", "bridge"]
 
 		try:									# Error thrown if folder exists
 			os.mkdir(str(subdir) + 'cleaned_files')			# Create a folder for the artist
@@ -38,37 +39,38 @@ for subdir, dirs, files in os.walk(root_dir):
 			output_file = open(str(subdir) + 'cleaned_files/' 
 				+ os.path.splitext(file)[0] + '_output.txt', 'w')
 			with open(subdir + file) as f:
-				temp = ''.join(f.readlines())
+				lyrics = ''.join(f.readlines())
 				f.seek(0)
-				if (re.search(r"[[\]]+", temp)) == None:
+				## If the file has no structure lines
+				if (re.search(r"[[\]]+", lyrics)) == None:
 					for line in f:
 						output_file.write(line)
-				#elif ((re.search(r"[[\]]+", temp)) != None) and (artist.lower().replace(' ', '') not in temp):
-					#print("hello")
-				# If there are no headers -> return entire file
-				# If there are headers, but no artist inside them -> retun entire file
-				# If there are headers, and artist is inside -> only return blocks with artist
-				else:
-				# Add case for files that are being skipped ( [Hook:], [Verse 1], [x2] )
-					flag = False
-					# Look for artist
-					for line in f:
-						# Look for brackets [ ]
-						if (re.search(r"[[\]]+", line)) != None:		# Header
-							if artist.lower() in line.lower().replace(' ', ''):
-								#print(line.lower().strip(' '))
-								output_file.write(line)
-								flag = True
-							else:
-								flag = False
-						else:											# Not a header
-							if flag == True:
-								output_file.write(line)
-		
+				## If the file has structure: [ something ]
+				elif (re.search(r"[[\]]+", lyrics)) != None:
+					if artist in lyrics.lower():
+						flag = False
+						## Look for artist
+						for line in f:
+							# Look for brackets [ ]
+							if (re.search(r"[[\]]+", line)) != None:		# Header
+								if artist.lower() in line.lower().replace(' ', ''):
+									##print(line.lower().strip(' '))
+									output_file.write(line)
+									flag = True
+								else:
+									flag = False
+							else:											# Not a header
+								if flag == True:
+									output_file.write(line)
+						# TODO: add case for structure found
+
+					## No artist name found, but [ ] found
+					else:
+						for line2 in f:
+							output_file.write(line2)
+							#if ((re.search(r"[[\]]+", line2)) != None) and (any(substring in line2 for substring in song_structure)):
+
 			output_file.close()
-
-
-
 '''
 artists = raw_input("artists to search for in " + str(artist) + ": ")
 artists = artists.lower().replace(" ", "").split(",")
